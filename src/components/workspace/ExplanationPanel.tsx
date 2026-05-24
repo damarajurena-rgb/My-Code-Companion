@@ -126,29 +126,8 @@ export function ExplanationPanel({
                 </ol>
               </section>
 
-              <section className="rounded-lg border border-border bg-card/40 p-3">
-                <div className="mb-2 flex items-center gap-2">
-                  <Database className="h-3.5 w-3.5 text-mint" />
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-mint">
-                    Memory Model
-                  </p>
-                </div>
-                <div className="prose prose-invert prose-sm max-w-none text-sm">
-                  <ReactMarkdown>{result.memory}</ReactMarkdown>
-                </div>
-              </section>
 
-              <section className="rounded-lg border border-border bg-card/40 p-3">
-                <div className="mb-2 flex items-center gap-2">
-                  <Activity className="h-3.5 w-3.5 text-mint" />
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-mint">
-                    Execution Flow
-                  </p>
-                </div>
-                <div className="prose prose-invert prose-sm max-w-none text-sm">
-                  <ReactMarkdown>{result.flow}</ReactMarkdown>
-                </div>
-              </section>
+
 
               {(consequence.loading || consequence.data) && (
                 <section className="rounded-lg border border-mint/30 bg-mint/5 p-3">
