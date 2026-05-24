@@ -1,5 +1,5 @@
 import ReactMarkdown from "react-markdown";
-import { Loader2, Sparkles, AlertTriangle, Activity, Database } from "lucide-react";
+import { Loader2, Sparkles, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -7,7 +7,9 @@ export interface ExplainResult {
   summary: string;
   lines: Array<{ line: number; code: string; explain: string }>;
   memory: string;
+  memoryDiagram?: string;
   flow: string;
+  flowDiagram?: string;
 }
 
 interface Props {
