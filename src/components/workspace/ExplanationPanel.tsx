@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
-import { Loader2, Sparkles, AlertTriangle } from "lucide-react";
+import { useState } from "react";
+import { Loader2, Sparkles, AlertTriangle, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -43,6 +44,18 @@ export function ExplanationPanel({
   consequence,
   onAnalyzeLine,
 }: Props) {
+  const [copiedLine, setCopiedLine] = useState<number | null>(null);
+
+  const copyLine = async (line: number, code: string, explain: string) => {
+    const text = `// L${line}: ${code}\n// ${explain}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedLine(line);
+      setTimeout(() => setCopiedLine((v) => (v === line ? null : v)), 1500);
+    } catch {
+      /* ignore */
+    }
+  };
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -108,9 +121,26 @@ export function ExplanationPanel({
                             L{l.line}
                           </span>
                           <div className="flex-1">
-                            <pre className="mb-1 overflow-x-auto whitespace-pre-wrap break-words font-mono text-[11px] text-muted-foreground">
-                              {l.code}
-                            </pre>
+                            <div className="mb-1 flex items-start gap-2">
+                              <pre className="flex-1 overflow-x-auto whitespace-pre-wrap break-words font-mono text-[11px] text-muted-foreground">
+                                {l.code}
+                              </pre>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  copyLine(l.line, l.code, l.explain);
+                                }}
+                                title="Copy line + explanation"
+                                aria-label={`Copy line ${l.line}`}
+                                className="shrink-0 rounded border border-border bg-card/60 p-1 text-muted-foreground transition-colors hover:border-mint/40 hover:text-mint"
+                              >
+                                {copiedLine === l.line ? (
+                                  <Check className="h-3 w-3 text-mint" />
+                                ) : (
+                                  <Copy className="h-3 w-3" />
+                                )}
+                              </button>
+                            </div>
                             <p className="text-[13px] leading-snug">{l.explain}</p>
                             <button
                               onClick={() => onAnalyzeLine?.(l.line)}

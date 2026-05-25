@@ -7,20 +7,20 @@ mermaid.initialize({
   theme: "dark",
   fontFamily: "JetBrains Mono, monospace",
   themeVariables: {
-    primaryColor: "#1b4332",
-    primaryTextColor: "#e6fff4",
-    primaryBorderColor: "#2dd4a8",
-    lineColor: "#2dd4a8",
-    secondaryColor: "#0f2a3a",
-    tertiaryColor: "#0d1b2a",
-    background: "#0d1b2a",
-    mainBkg: "#1b4332",
-    nodeBorder: "#2dd4a8",
-    clusterBkg: "#0f2a3a",
-    clusterBorder: "#2dd4a8",
-    edgeLabelBackground: "#0d1b2a",
+    primaryColor: "#2a1244",
+    primaryTextColor: "#f3e8ff",
+    primaryBorderColor: "#a855f7",
+    lineColor: "#c084fc",
+    secondaryColor: "#1a0b2e",
+    tertiaryColor: "#0d0618",
+    background: "#0d0618",
+    mainBkg: "#2a1244",
+    nodeBorder: "#a855f7",
+    clusterBkg: "#1a0b2e",
+    clusterBorder: "#a855f7",
+    edgeLabelBackground: "#0d0618",
   },
-  flowchart: { htmlLabels: true, curve: "basis" },
+  flowchart: { htmlLabels: true, curve: "basis", padding: 16, nodeSpacing: 50, rankSpacing: 60, useMaxWidth: true },
   securityLevel: "loose",
 });
 
@@ -81,7 +81,7 @@ export function MermaidDiagram({ code, id }: Props) {
   return (
     <div
       ref={containerRef}
-      className="mermaid-host flex w-full justify-center overflow-auto p-2 [&_svg]:!max-w-full [&_svg]:!h-auto"
+      className="mermaid-host flex w-full justify-center overflow-auto p-4 [&_svg]:!max-w-full [&_svg]:!h-auto [&_svg]:!min-h-[280px]"
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );

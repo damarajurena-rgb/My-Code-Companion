@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState, useCallback } from "react";
-import { Code2, Github, Sparkles, Database, Activity, Bot } from "lucide-react";
+import { useState, useCallback, useEffect } from "react";
+import { Code2, Sparkles, Database, Activity, Bot } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 import { aiAssist } from "@/lib/ai.functions";
@@ -80,6 +80,17 @@ function Workspace() {
       setExplainLoading(false);
     }
   }, [callAI, code, language]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+        e.preventDefault();
+        if (!explainLoading) runExplain();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [runExplain, explainLoading]);
 
   const analyzeLine = useCallback(
     async (line: number) => {
@@ -166,19 +177,14 @@ function Workspace() {
             onClick={runExplain}
             disabled={explainLoading}
             className="h-8 bg-mint text-primary-foreground hover:bg-mint-glow"
+            title="Explain (⌘/Ctrl + Enter)"
           >
             <Sparkles className="mr-1.5 h-3.5 w-3.5" />
             Explain
+            <kbd className="ml-2 hidden rounded bg-black/30 px-1.5 py-0.5 font-mono text-[9px] text-primary-foreground/80 sm:inline">
+              ⌘↵
+            </kbd>
           </Button>
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
-            aria-label="GitHub"
-          >
-            <Github className="h-4 w-4" />
-          </a>
         </div>
       </header>
 
@@ -274,10 +280,6 @@ function Workspace() {
           <AssistantChat messages={chat} onSend={sendChat} loading={chatLoading} />
         </div>
       </section>
-
-      <footer className="border-t border-border px-4 py-3 text-center font-mono text-[10px] text-muted-foreground">
-        Built with Lovable AI · Monaco · Mermaid
-      </footer>
     </div>
   );
 }

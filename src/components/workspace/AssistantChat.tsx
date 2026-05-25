@@ -17,10 +17,12 @@ interface Props {
 }
 
 const SUGGESTIONS = [
-  "Explain what happens in memory step by step",
-  "What's the time complexity?",
-  "Rewrite this iteratively instead of recursively",
-  "Where could this code break?",
+  "Debug this code — find errors and explain the fix",
+  "Rewrite this recursively (or iteratively if it already is)",
+  "Suggest 2 alternative ways to write the same thing",
+  "What if the base case / loop condition was wrong?",
+  "Walk me through memory step by step",
+  "What's the time and space complexity?",
 ];
 
 export function AssistantChat({ messages, onSend, loading }: Props) {
