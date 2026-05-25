@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState, useCallback } from "react";
-import { Code2, Github, Sparkles, Database, Activity, Bot } from "lucide-react";
+import { useState, useCallback, useEffect } from "react";
+import { Code2, Sparkles, Database, Activity, Bot } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 import { aiAssist } from "@/lib/ai.functions";
