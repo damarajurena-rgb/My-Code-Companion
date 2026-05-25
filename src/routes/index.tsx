@@ -10,6 +10,8 @@ import { CodeEditor } from "@/components/workspace/CodeEditor";
 import { ExplanationPanel, type ExplainResult } from "@/components/workspace/ExplanationPanel";
 import { AssistantChat, type ChatMessage } from "@/components/workspace/AssistantChat";
 import { MermaidDiagram } from "@/components/workspace/MermaidDiagram";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { OnboardingTour } from "@/components/OnboardingTour";
 import {
   Select,
   SelectContent,
@@ -142,7 +144,14 @@ function Workspace() {
   const currentLang = LANGUAGES.find((l) => l.id === language)!;
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh flex-col">
+      <OnboardingTour />
+      <a
+        href="#workspace-main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-mint focus:px-3 focus:py-1.5 focus:text-xs focus:font-medium focus:text-primary-foreground"
+      >
+        Skip to main content
+      </a>
       {/* ────────── Row 1: Header / Navigation ────────── */}
       <header className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 border-b border-border bg-background/80 px-4 py-2.5 backdrop-blur">
         <div className="flex items-center gap-3">
@@ -161,7 +170,7 @@ function Workspace() {
 
         <div className="flex items-center gap-2">
           <Select value={language} onValueChange={onLanguageChange}>
-            <SelectTrigger className="h-8 w-[130px] border-border bg-input font-mono text-xs">
+            <SelectTrigger aria-label="Programming language" className="h-8 w-[130px] border-border bg-input font-mono text-xs">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -178,15 +187,19 @@ function Workspace() {
             disabled={explainLoading}
             className="h-8 bg-mint text-primary-foreground hover:bg-mint-glow"
             title="Explain (⌘/Ctrl + Enter)"
+            aria-label="Explain code (Command or Control + Enter)"
           >
-            <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+            <Sparkles className="mr-1.5 h-3.5 w-3.5" aria-hidden />
             Explain
             <kbd className="ml-2 hidden rounded bg-black/30 px-1.5 py-0.5 font-mono text-[9px] text-primary-foreground/80 sm:inline">
               ⌘↵
             </kbd>
           </Button>
+          <ThemeToggle />
         </div>
       </header>
+
+      <main id="workspace-main" className="flex flex-1 flex-col">
 
       {/* ────────── Row 2: Editor | Explanations ────────── */}
       <section className="grid grid-cols-1 gap-3 px-3 pt-3 lg:grid-cols-2">
@@ -280,6 +293,7 @@ function Workspace() {
           <AssistantChat messages={chat} onSend={sendChat} loading={chatLoading} />
         </div>
       </section>
+      </main>
     </div>
   );
 }
@@ -304,9 +318,11 @@ function DiagramView({
   }
   return (
     <div className="grid gap-3 p-3 md:grid-cols-[1fr_280px]">
-      <div className="min-h-[260px] rounded-md border border-border bg-background/40">
+      <div className="h-[480px] rounded-md border border-border bg-background/40">
         {diagram ? (
-          <MermaidDiagram code={diagram} id={id} />
+          <div className="h-full w-full">
+            <MermaidDiagram code={diagram} id={id} />
+          </div>
         ) : (
           <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
             No diagram available
@@ -317,7 +333,7 @@ function DiagramView({
         <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-mint">
           Notes
         </p>
-        <div className="prose prose-invert prose-sm max-w-none text-sm">
+        <div className="prose prose-sm dark:prose-invert max-w-none text-sm">
           {text ? <ReactMarkdown>{text}</ReactMarkdown> : <p className="text-muted-foreground">—</p>}
         </div>
       </aside>

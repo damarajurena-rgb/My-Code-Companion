@@ -1,5 +1,5 @@
 import Editor, { type OnMount } from "@monaco-editor/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface CodeEditorProps {
   value: string;
@@ -9,9 +9,21 @@ interface CodeEditorProps {
   highlightedLine?: number | null;
 }
 
+function currentTheme() {
+  if (typeof document === "undefined") return "vs-dark";
+  return document.documentElement.classList.contains("dark") ? "vs-dark" : "vs";
+}
+
 export function CodeEditor({ value, onChange, language, onLineClick, highlightedLine }: CodeEditorProps) {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const decoRef = useRef<string[]>([]);
+  const [theme, setTheme] = useState<string>(currentTheme());
+
+  useEffect(() => {
+    const onChange = () => setTheme(currentTheme());
+    window.addEventListener("ct-theme-change", onChange);
+    return () => window.removeEventListener("ct-theme-change", onChange);
+  }, []);
 
   const handleMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
@@ -20,7 +32,6 @@ export function CodeEditor({ value, onChange, language, onLineClick, highlighted
       if (line && onLineClick) onLineClick(line);
     });
 
-    // Apply highlight if any
     if (highlightedLine) {
       decoRef.current = editor.deltaDecorations(decoRef.current, [
         {
@@ -45,7 +56,7 @@ export function CodeEditor({ value, onChange, language, onLineClick, highlighted
         height="100%"
         language={language}
         value={value}
-        theme="vs-dark"
+        theme={theme}
         onChange={(v) => onChange(v ?? "")}
         onMount={handleMount}
         options={{
@@ -57,6 +68,7 @@ export function CodeEditor({ value, onChange, language, onLineClick, highlighted
           padding: { top: 14, bottom: 14 },
           renderLineHighlight: "gutter",
           tabSize: 2,
+          ariaLabel: "Code editor",
         }}
       />
     </div>

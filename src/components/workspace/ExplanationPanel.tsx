@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
-import { Loader2, Sparkles, AlertTriangle, Copy, Check } from "lucide-react";
+import { Loader2, Sparkles, AlertTriangle, Copy, Check, Download, ClipboardCopy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -56,16 +56,73 @@ export function ExplanationPanel({
       /* ignore */
     }
   };
+  const [copiedAll, setCopiedAll] = useState(false);
+
+  const buildFullText = () => {
+    if (!result) return "";
+    const lines = result.lines
+      .map((l) => `L${l.line}: ${l.code}\n   → ${l.explain}`)
+      .join("\n\n");
+    return `# Tutor Explanation\n\n## Summary\n${result.summary}\n\n## Line by Line\n${lines}\n`;
+  };
+
+  const copyAll = async () => {
+    const text = buildFullText();
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedAll(true);
+      setTimeout(() => setCopiedAll(false), 1500);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const downloadAll = () => {
+    const text = buildFullText();
+    if (!text) return;
+    const blob = new Blob([text], { type: "text/markdown;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "explanation.md";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-mint" />
+          <Sparkles className="h-4 w-4 text-mint" aria-hidden />
           <h2 className="font-mono text-sm font-semibold tracking-tight">Tutor Explanation</h2>
         </div>
-        <Button size="sm" onClick={onRun} disabled={loading} className="bg-mint text-primary-foreground hover:bg-mint-glow">
-          {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Explain"}
-        </Button>
+        <div className="flex items-center gap-1.5">
+          {result && (
+            <>
+              <button
+                onClick={copyAll}
+                aria-label="Copy full explanation to clipboard"
+                title="Copy all"
+                className="inline-flex h-8 items-center justify-center rounded-md border border-border bg-card/60 px-2 text-muted-foreground transition-colors hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                {copiedAll ? <Check className="h-3.5 w-3.5 text-mint" /> : <ClipboardCopy className="h-3.5 w-3.5" />}
+              </button>
+              <button
+                onClick={downloadAll}
+                aria-label="Download explanation as markdown"
+                title="Download .md"
+                className="inline-flex h-8 items-center justify-center rounded-md border border-border bg-card/60 px-2 text-muted-foreground transition-colors hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Download className="h-3.5 w-3.5" />
+              </button>
+            </>
+          )}
+          <Button size="sm" onClick={onRun} disabled={loading} className="bg-mint text-primary-foreground hover:bg-mint-glow">
+            {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Explain"}
+          </Button>
+        </div>
       </div>
 
       <ScrollArea className="flex-1">
@@ -187,7 +244,7 @@ export function ExplanationPanel({
                       <pre className="mb-2 overflow-x-auto rounded bg-background/60 px-2 py-1 font-mono text-[11px] text-muted-foreground">
                         {consequence.data.removedCode}
                       </pre>
-                      <div className="prose prose-invert prose-sm max-w-none text-sm">
+                      <div className="prose prose-sm dark:prose-invert max-w-none text-sm">
                         <ReactMarkdown>{consequence.data.impact}</ReactMarkdown>
                       </div>
                     </div>
