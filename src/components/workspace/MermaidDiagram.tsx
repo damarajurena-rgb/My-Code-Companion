@@ -81,7 +81,7 @@ export function MermaidDiagram({ code, id }: Props) {
   return (
     <div
       ref={containerRef}
-      className="mermaid-host flex w-full justify-center overflow-auto p-2 [&_svg]:!max-w-full [&_svg]:!h-auto"
+      className="mermaid-host flex w-full justify-center overflow-auto p-4 [&_svg]:!max-w-full [&_svg]:!h-auto [&_svg]:!min-h-[280px]"
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );
