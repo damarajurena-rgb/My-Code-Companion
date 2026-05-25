@@ -159,6 +159,36 @@
   --bg-gradient-2: oklch(0.3 0.2 320 / 0.22);
 }
 
+/* High-contrast mode — applied on top of .dark for max legibility */
+.hc {
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.08 0 0);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0.08 0 0);
+  --popover-foreground: oklch(1 0 0);
+  --primary: oklch(0.92 0.2 305);
+  --primary-foreground: oklch(0 0 0);
+  --secondary: oklch(0.15 0 0);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.12 0 0);
+  --muted-foreground: oklch(0.95 0 0);
+  --accent: oklch(0.92 0.2 305);
+  --accent-foreground: oklch(0 0 0);
+  --border: oklch(0.6 0 0);
+  --input: oklch(0.12 0 0);
+  --ring: oklch(0.95 0 0);
+  --mint: oklch(0.92 0.2 305);
+  --mint-glow: oklch(0.95 0.18 310);
+  --bg-gradient-1: oklch(0 0 0 / 0);
+  --bg-gradient-2: oklch(0 0 0 / 0);
+}
+
+.hc *:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
