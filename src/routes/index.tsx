@@ -144,7 +144,14 @@ function Workspace() {
   const currentLang = LANGUAGES.find((l) => l.id === language)!;
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh flex-col">
+      <OnboardingTour />
+      <a
+        href="#workspace-main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-mint focus:px-3 focus:py-1.5 focus:text-xs focus:font-medium focus:text-primary-foreground"
+      >
+        Skip to main content
+      </a>
       {/* ────────── Row 1: Header / Navigation ────────── */}
       <header className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 border-b border-border bg-background/80 px-4 py-2.5 backdrop-blur">
         <div className="flex items-center gap-3">
