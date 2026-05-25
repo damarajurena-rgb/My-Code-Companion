@@ -333,7 +333,7 @@ function DiagramView({
         <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-mint">
           Notes
         </p>
-        <div className="prose prose-invert prose-sm max-w-none text-sm">
+        <div className="prose prose-sm dark:prose-invert max-w-none text-sm">
           {text ? <ReactMarkdown>{text}</ReactMarkdown> : <p className="text-muted-foreground">—</p>}
         </div>
       </aside>

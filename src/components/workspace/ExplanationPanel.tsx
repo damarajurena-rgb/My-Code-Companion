@@ -244,7 +244,7 @@ export function ExplanationPanel({
                       <pre className="mb-2 overflow-x-auto rounded bg-background/60 px-2 py-1 font-mono text-[11px] text-muted-foreground">
                         {consequence.data.removedCode}
                       </pre>
-                      <div className="prose prose-invert prose-sm max-w-none text-sm">
+                      <div className="prose prose-sm dark:prose-invert max-w-none text-sm">
                         <ReactMarkdown>{consequence.data.impact}</ReactMarkdown>
                       </div>
                     </div>

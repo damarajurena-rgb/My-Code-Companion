@@ -88,7 +88,7 @@ export function AssistantChat({ messages, onSend, loading }: Props) {
                 }`}
               >
                 {m.role === "assistant" ? (
-                  <div className="prose prose-invert prose-sm max-w-none">
+                  <div className="prose prose-sm dark:prose-invert max-w-none">
                     <ReactMarkdown>{m.content}</ReactMarkdown>
                   </div>
                 ) : (
