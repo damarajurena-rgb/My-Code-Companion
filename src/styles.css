@@ -173,8 +173,8 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     background-image:
-      radial-gradient(ellipse at top left, oklch(0.35 0.18 305 / 0.28), transparent 60%),
-      radial-gradient(ellipse at bottom right, oklch(0.3 0.2 320 / 0.22), transparent 55%);
+      radial-gradient(ellipse at top left, var(--bg-gradient-1), transparent 60%),
+      radial-gradient(ellipse at bottom right, var(--bg-gradient-2), transparent 55%);
   }
 
   h1, h2, h3, h4, h5, h6 {
