@@ -121,9 +121,26 @@ export function ExplanationPanel({
                             L{l.line}
                           </span>
                           <div className="flex-1">
-                            <pre className="mb-1 overflow-x-auto whitespace-pre-wrap break-words font-mono text-[11px] text-muted-foreground">
-                              {l.code}
-                            </pre>
+                            <div className="mb-1 flex items-start gap-2">
+                              <pre className="flex-1 overflow-x-auto whitespace-pre-wrap break-words font-mono text-[11px] text-muted-foreground">
+                                {l.code}
+                              </pre>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  copyLine(l.line, l.code, l.explain);
+                                }}
+                                title="Copy line + explanation"
+                                aria-label={`Copy line ${l.line}`}
+                                className="shrink-0 rounded border border-border bg-card/60 p-1 text-muted-foreground transition-colors hover:border-mint/40 hover:text-mint"
+                              >
+                                {copiedLine === l.line ? (
+                                  <Check className="h-3 w-3 text-mint" />
+                                ) : (
+                                  <Copy className="h-3 w-3" />
+                                )}
+                              </button>
+                            </div>
                             <p className="text-[13px] leading-snug">{l.explain}</p>
                             <button
                               onClick={() => onAnalyzeLine?.(l.line)}
