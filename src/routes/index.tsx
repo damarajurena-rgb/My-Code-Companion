@@ -170,7 +170,7 @@ function Workspace() {
 
         <div className="flex items-center gap-2">
           <Select value={language} onValueChange={onLanguageChange}>
-            <SelectTrigger className="h-8 w-[130px] border-border bg-input font-mono text-xs">
+            <SelectTrigger aria-label="Programming language" className="h-8 w-[130px] border-border bg-input font-mono text-xs">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -187,15 +187,19 @@ function Workspace() {
             disabled={explainLoading}
             className="h-8 bg-mint text-primary-foreground hover:bg-mint-glow"
             title="Explain (⌘/Ctrl + Enter)"
+            aria-label="Explain code (Command or Control + Enter)"
           >
-            <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+            <Sparkles className="mr-1.5 h-3.5 w-3.5" aria-hidden />
             Explain
             <kbd className="ml-2 hidden rounded bg-black/30 px-1.5 py-0.5 font-mono text-[9px] text-primary-foreground/80 sm:inline">
               ⌘↵
             </kbd>
           </Button>
+          <ThemeToggle />
         </div>
       </header>
+
+      <main id="workspace-main" className="flex flex-1 flex-col">
 
       {/* ────────── Row 2: Editor | Explanations ────────── */}
       <section className="grid grid-cols-1 gap-3 px-3 pt-3 lg:grid-cols-2">
