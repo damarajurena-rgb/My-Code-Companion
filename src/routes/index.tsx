@@ -318,9 +318,11 @@ function DiagramView({
   }
   return (
     <div className="grid gap-3 p-3 md:grid-cols-[1fr_280px]">
-      <div className="min-h-[260px] rounded-md border border-border bg-background/40">
+      <div className="h-[480px] rounded-md border border-border bg-background/40">
         {diagram ? (
-          <MermaidDiagram code={diagram} id={id} />
+          <div className="h-full w-full">
+            <MermaidDiagram code={diagram} id={id} />
+          </div>
         ) : (
           <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
             No diagram available
