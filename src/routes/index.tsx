@@ -81,6 +81,17 @@ function Workspace() {
     }
   }, [callAI, code, language]);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+        e.preventDefault();
+        if (!explainLoading) runExplain();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [runExplain, explainLoading]);
+
   const analyzeLine = useCallback(
     async (line: number) => {
       setConsequence({ loading: true, data: null });
