@@ -166,19 +166,14 @@ function Workspace() {
             onClick={runExplain}
             disabled={explainLoading}
             className="h-8 bg-mint text-primary-foreground hover:bg-mint-glow"
+            title="Explain (⌘/Ctrl + Enter)"
           >
             <Sparkles className="mr-1.5 h-3.5 w-3.5" />
             Explain
+            <kbd className="ml-2 hidden rounded bg-black/30 px-1.5 py-0.5 font-mono text-[9px] text-primary-foreground/80 sm:inline">
+              ⌘↵
+            </kbd>
           </Button>
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
-            aria-label="GitHub"
-          >
-            <Github className="h-4 w-4" />
-          </a>
         </div>
       </header>
 
