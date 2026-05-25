@@ -44,6 +44,18 @@ export function ExplanationPanel({
   consequence,
   onAnalyzeLine,
 }: Props) {
+  const [copiedLine, setCopiedLine] = useState<number | null>(null);
+
+  const copyLine = async (line: number, code: string, explain: string) => {
+    const text = `// L${line}: ${code}\n// ${explain}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedLine(line);
+      setTimeout(() => setCopiedLine((v) => (v === line ? null : v)), 1500);
+    } catch {
+      /* ignore */
+    }
+  };
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
