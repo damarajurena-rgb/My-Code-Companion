@@ -269,10 +269,6 @@ function Workspace() {
           <AssistantChat messages={chat} onSend={sendChat} loading={chatLoading} />
         </div>
       </section>
-
-      <footer className="border-t border-border px-4 py-3 text-center font-mono text-[10px] text-muted-foreground">
-        Built with Lovable AI · Monaco · Mermaid
-      </footer>
     </div>
   );
 }
