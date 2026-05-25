@@ -293,6 +293,7 @@ function Workspace() {
           <AssistantChat messages={chat} onSend={sendChat} loading={chatLoading} />
         </div>
       </section>
+      </main>
     </div>
   );
 }
