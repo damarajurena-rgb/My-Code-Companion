@@ -55,9 +55,12 @@ initMermaid();
 interface Props {
   code: string;
   id: string;
+  onNodeLineClick?: (line: number) => void;
+  onNodeLineHover?: (line: number | null) => void;
+  highlightLine?: number | null;
 }
 
-export function MermaidDiagram({ code, id }: Props) {
+export function MermaidDiagram({ code, id, onNodeLineClick, onNodeLineHover, highlightLine }: Props) {
   const [svg, setSvg] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [themeBump, setThemeBump] = useState(0);
