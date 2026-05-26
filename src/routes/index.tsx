@@ -325,11 +325,23 @@ function DiagramView({
   text,
   id,
   emptyHint,
+  snapshotLine,
+  snapshots,
+  onPickSnapshot,
+  onNodeLineClick,
+  onNodeLineHover,
+  highlightLine,
 }: {
   diagram?: string;
   text?: string;
   id: string;
   emptyHint: string;
+  snapshotLine?: number | null;
+  snapshots?: MemorySnapshot[];
+  onPickSnapshot?: (line: number) => void;
+  onNodeLineClick?: (line: number) => void;
+  onNodeLineHover?: (line: number | null) => void;
+  highlightLine?: number | null;
 }) {
   if (!diagram && !text) {
     return (
@@ -340,24 +352,64 @@ function DiagramView({
   }
   return (
     <div className="grid gap-3 p-3 md:grid-cols-[1fr_280px]">
-      <div className="h-[480px] rounded-md border border-border bg-background/40">
-        {diagram ? (
-          <div className="h-full w-full">
-            <MermaidDiagram code={diagram} id={id} />
-          </div>
-        ) : (
-          <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
-            No diagram available
+      <div className="flex h-[480px] flex-col rounded-md border border-border bg-background/40">
+        {snapshots && snapshots.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1 border-b border-border bg-card/40 px-2 py-1.5">
+            <span className="mr-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              Snapshot
+            </span>
+            <button
+              onClick={() => onPickSnapshot?.(0)}
+              className={`rounded px-2 py-0.5 font-mono text-[10px] transition-colors ${
+                !snapshotLine
+                  ? "bg-mint text-primary-foreground"
+                  : "bg-secondary text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              final
+            </button>
+            {snapshots.map((s) => (
+              <button
+                key={s.line}
+                onClick={() => onPickSnapshot?.(s.line)}
+                title={s.note}
+                className={`rounded px-2 py-0.5 font-mono text-[10px] transition-colors ${
+                  snapshotLine === s.line
+                    ? "bg-mint text-primary-foreground"
+                    : "bg-secondary text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                L{s.line}
+              </button>
+            ))}
           </div>
         )}
+        <div className="min-h-0 flex-1">
+          {diagram ? (
+            <MermaidDiagram
+              code={diagram}
+              id={id}
+              onNodeLineClick={onNodeLineClick}
+              onNodeLineHover={onNodeLineHover}
+              highlightLine={highlightLine}
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+              No diagram available
+            </div>
+          )}
+        </div>
       </div>
       <aside className="rounded-md border border-border bg-card/40 p-3">
         <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-mint">
-          Notes
+          {snapshotLine ? `Snapshot @ L${snapshotLine}` : "Notes"}
         </p>
         <div className="prose prose-sm dark:prose-invert max-w-none text-sm">
           {text ? <ReactMarkdown>{text}</ReactMarkdown> : <p className="text-muted-foreground">—</p>}
         </div>
+        <p className="mt-3 text-[10px] text-muted-foreground">
+          Tip: hover a code line or click a memory node labeled (Lx) to sync views.
+        </p>
       </aside>
     </div>
   );
