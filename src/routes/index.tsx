@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { aiAssist } from "@/lib/ai.functions";
 import { LANGUAGES, SAMPLES, type LangId } from "@/lib/languages";
 import { CodeEditor } from "@/components/workspace/CodeEditor";
-import { ExplanationPanel, type ExplainResult } from "@/components/workspace/ExplanationPanel";
+import { ExplanationPanel, type ExplainResult, type MemorySnapshot } from "@/components/workspace/ExplanationPanel";
 import { AssistantChat, type ChatMessage } from "@/components/workspace/AssistantChat";
 import { MermaidDiagram } from "@/components/workspace/MermaidDiagram";
 import { ThemeToggle } from "@/components/ThemeToggle";
