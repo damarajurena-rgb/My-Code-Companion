@@ -4,6 +4,12 @@ import { Loader2, Sparkles, AlertTriangle, Copy, Check, Download, ClipboardCopy 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+export interface MemorySnapshot {
+  line: number;
+  note?: string;
+  memoryDiagram: string;
+}
+
 export interface ExplainResult {
   summary: string;
   lines: Array<{ line: number; code: string; explain: string }>;
@@ -11,6 +17,7 @@ export interface ExplainResult {
   memoryDiagram?: string;
   flow: string;
   flowDiagram?: string;
+  snapshots?: MemorySnapshot[];
 }
 
 interface Props {
