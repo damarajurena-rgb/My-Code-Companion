@@ -263,10 +263,30 @@ function Workspace() {
             </div>
             <TabsContent value="memory" className="m-0">
               <DiagramView
-                diagram={explainResult?.memoryDiagram}
-                text={explainResult?.memory}
-                id="mem"
-                emptyHint="Run Explain to visualize the variables, stack frames, and heap allocations."
+                diagram={
+                  (highlightedLine &&
+                    explainResult?.snapshots?.find((s) => s.line === highlightedLine)
+                      ?.memoryDiagram) ||
+                  explainResult?.memoryDiagram
+                }
+                text={
+                  (highlightedLine &&
+                    explainResult?.snapshots?.find((s) => s.line === highlightedLine)?.note) ||
+                  explainResult?.memory
+                }
+                id={`mem-${highlightedLine ?? "all"}`}
+                emptyHint="Run Explain to visualize variables, stack frames, heap objects, arrays, queues, and linked lists."
+                snapshotLine={
+                  highlightedLine &&
+                  explainResult?.snapshots?.some((s) => s.line === highlightedLine)
+                    ? highlightedLine
+                    : null
+                }
+                snapshots={explainResult?.snapshots}
+                onPickSnapshot={(l) => setHighlightedLine(l)}
+                onNodeLineClick={(l) => setHighlightedLine(l)}
+                onNodeLineHover={(l) => setHighlightedLine(l)}
+                highlightLine={highlightedLine}
               />
             </TabsContent>
             <TabsContent value="flow" className="m-0">
@@ -275,6 +295,8 @@ function Workspace() {
                 text={explainResult?.flow}
                 id="flow"
                 emptyHint="Run Explain to visualize loops, branches, recursion, and function calls."
+                onNodeLineClick={(l) => setHighlightedLine(l)}
+                highlightLine={highlightedLine}
               />
             </TabsContent>
           </Tabs>
