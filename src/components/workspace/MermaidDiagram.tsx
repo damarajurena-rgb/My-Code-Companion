@@ -164,6 +164,7 @@ export function MermaidDiagram({ code, id, onNodeLineClick, onNodeLineHover, hig
 
     return () => {
       ro.disconnect();
+      cleanupFns.forEach((fn) => fn());
       try {
         panZoomRef.current?.destroy();
       } catch {
@@ -171,7 +172,18 @@ export function MermaidDiagram({ code, id, onNodeLineClick, onNodeLineHover, hig
       }
       panZoomRef.current = null;
     };
-  }, [svg]);
+  }, [svg, onNodeLineClick, onNodeLineHover]);
+
+  // Highlight nodes that reference the active line.
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const nodes = containerRef.current.querySelectorAll<SVGGElement>("g.node[data-line]");
+    nodes.forEach((n) => {
+      const active = highlightLine != null && n.getAttribute("data-line") === String(highlightLine);
+      n.style.outline = active ? "2px solid #a855f7" : "";
+      n.style.filter = active ? "drop-shadow(0 0 6px #a855f7)" : "";
+    });
+  }, [highlightLine, svg]);
 
   const zoomIn = () => panZoomRef.current?.zoomIn();
   const zoomOut = () => panZoomRef.current?.zoomOut();
