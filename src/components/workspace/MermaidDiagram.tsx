@@ -55,9 +55,12 @@ initMermaid();
 interface Props {
   code: string;
   id: string;
+  onNodeLineClick?: (line: number) => void;
+  onNodeLineHover?: (line: number | null) => void;
+  highlightLine?: number | null;
 }
 
-export function MermaidDiagram({ code, id }: Props) {
+export function MermaidDiagram({ code, id, onNodeLineClick, onNodeLineHover, highlightLine }: Props) {
   const [svg, setSvg] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [themeBump, setThemeBump] = useState(0);
@@ -135,8 +138,33 @@ export function MermaidDiagram({ code, id }: Props) {
     });
     ro.observe(containerRef.current);
 
+    // Cross-link memory nodes to source lines: any node whose label contains
+    // (L<number>) gets click + hover handlers that drive the editor highlight.
+    const nodes = svgEl.querySelectorAll<SVGGElement>("g.node");
+    const cleanupFns: Array<() => void> = [];
+    nodes.forEach((node) => {
+      const text = node.textContent ?? "";
+      const m = text.match(/L(\d+)/);
+      if (!m) return;
+      const line = Number(m[1]);
+      (node as unknown as HTMLElement).style.cursor = "pointer";
+      node.setAttribute("data-line", String(line));
+      const onClick = () => onNodeLineClick?.(line);
+      const onEnter = () => onNodeLineHover?.(line);
+      const onLeave = () => onNodeLineHover?.(null);
+      node.addEventListener("click", onClick);
+      node.addEventListener("mouseenter", onEnter);
+      node.addEventListener("mouseleave", onLeave);
+      cleanupFns.push(() => {
+        node.removeEventListener("click", onClick);
+        node.removeEventListener("mouseenter", onEnter);
+        node.removeEventListener("mouseleave", onLeave);
+      });
+    });
+
     return () => {
       ro.disconnect();
+      cleanupFns.forEach((fn) => fn());
       try {
         panZoomRef.current?.destroy();
       } catch {
@@ -144,7 +172,18 @@ export function MermaidDiagram({ code, id }: Props) {
       }
       panZoomRef.current = null;
     };
-  }, [svg]);
+  }, [svg, onNodeLineClick, onNodeLineHover]);
+
+  // Highlight nodes that reference the active line.
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const nodes = containerRef.current.querySelectorAll<SVGGElement>("g.node[data-line]");
+    nodes.forEach((n) => {
+      const active = highlightLine != null && n.getAttribute("data-line") === String(highlightLine);
+      n.style.outline = active ? "2px solid #a855f7" : "";
+      n.style.filter = active ? "drop-shadow(0 0 6px #a855f7)" : "";
+    });
+  }, [highlightLine, svg]);
 
   const zoomIn = () => panZoomRef.current?.zoomIn();
   const zoomOut = () => panZoomRef.current?.zoomOut();
