@@ -138,6 +138,30 @@ export function MermaidDiagram({ code, id, onNodeLineClick, onNodeLineHover, hig
     });
     ro.observe(containerRef.current);
 
+    // Cross-link memory nodes to source lines: any node whose label contains
+    // (L<number>) gets click + hover handlers that drive the editor highlight.
+    const nodes = svgEl.querySelectorAll<SVGGElement>("g.node");
+    const cleanupFns: Array<() => void> = [];
+    nodes.forEach((node) => {
+      const text = node.textContent ?? "";
+      const m = text.match(/L(\d+)/);
+      if (!m) return;
+      const line = Number(m[1]);
+      (node as unknown as HTMLElement).style.cursor = "pointer";
+      node.setAttribute("data-line", String(line));
+      const onClick = () => onNodeLineClick?.(line);
+      const onEnter = () => onNodeLineHover?.(line);
+      const onLeave = () => onNodeLineHover?.(null);
+      node.addEventListener("click", onClick);
+      node.addEventListener("mouseenter", onEnter);
+      node.addEventListener("mouseleave", onLeave);
+      cleanupFns.push(() => {
+        node.removeEventListener("click", onClick);
+        node.removeEventListener("mouseenter", onEnter);
+        node.removeEventListener("mouseleave", onLeave);
+      });
+    });
+
     return () => {
       ro.disconnect();
       try {
