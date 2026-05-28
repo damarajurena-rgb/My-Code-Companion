@@ -9,6 +9,7 @@ import { LANGUAGES, SAMPLES, type LangId } from "@/lib/languages";
 import { CodeEditor } from "@/components/workspace/CodeEditor";
 import { ExplanationPanel, type ExplainResult, type MemorySnapshot } from "@/components/workspace/ExplanationPanel";
 import { AssistantChat, type ChatMessage } from "@/components/workspace/AssistantChat";
+import { FloatingAssistant } from "@/components/workspace/FloatingAssistant";
 import { MermaidDiagram } from "@/components/workspace/MermaidDiagram";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { OnboardingTour } from "@/components/OnboardingTour";
@@ -303,18 +304,8 @@ function Workspace() {
         </div>
       </section>
 
-      {/* ────────── Row 4: AI Assistant Chat (Copilot) ────────── */}
-      <section className="px-3 py-3">
-        <div className="flex items-center justify-between px-1 pb-2">
-          <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            <Bot className="h-3 w-3 text-mint" />
-            Copilot Assistant
-          </span>
-        </div>
-        <div className="h-[60vh] min-h-[420px] overflow-hidden rounded-lg border border-border bg-card/40">
-          <AssistantChat messages={chat} onSend={sendChat} loading={chatLoading} />
-        </div>
-      </section>
+      {/* ────────── Floating AI Assistant (movable / minimizable) ────────── */}
+      <FloatingAssistant messages={chat} onSend={sendChat} loading={chatLoading} />
       </main>
     </div>
   );
