@@ -305,7 +305,13 @@ function Workspace() {
       </section>
 
       {/* ────────── Floating AI Assistant (movable / minimizable) ────────── */}
-      <FloatingAssistant messages={chat} onSend={sendChat} loading={chatLoading} />
+      <FloatingAssistant
+        messages={chat}
+        onSend={sendChat}
+        loading={chatLoading}
+        onClear={() => setChat([])}
+      />
+
       </main>
     </div>
   );

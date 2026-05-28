@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Bot, Minus, X, GripHorizontal, GraduationCap, Zap, ScrollText } from "lucide-react";
+import { Bot, Minus, X, GripHorizontal, GraduationCap, Zap, ScrollText, Trash2 } from "lucide-react";
 import { AssistantChat, type ChatMessage } from "./AssistantChat";
 
 interface Props {
   messages: ChatMessage[];
   onSend: (text: string) => Promise<void>;
   loading: boolean;
+  onClear?: () => void;
 }
+
 
 const STORAGE_KEY = "ct-floating-assistant";
 
@@ -47,7 +49,8 @@ const MODE_META: Record<Mode, { label: string; icon: typeof GraduationCap; hint:
   exam: { label: "Exam Prep", icon: ScrollText, hint: "Viva-style Q&A drills" },
 };
 
-export function FloatingAssistant({ messages, onSend, loading }: Props) {
+export function FloatingAssistant({ messages, onSend, loading, onClear }: Props) {
+
   const [state, setState] = useState<State>(DEFAULT_STATE);
   const dragRef = useRef<{ dx: number; dy: number; moved: boolean } | null>(null);
   const resizeRef = useRef<{ sw: number; sh: number; sx: number; sy: number } | null>(null);
@@ -195,6 +198,21 @@ export function FloatingAssistant({ messages, onSend, loading }: Props) {
           <span className="font-mono text-xs font-semibold">Copilot Assistant</span>
         </div>
         <div className="flex items-center gap-0.5">
+          {onClear && (
+            <button
+              onClick={() => {
+                if (messages.length === 0) return;
+                if (window.confirm("Clear assistant conversation?")) onClear();
+              }}
+              aria-label="Clear conversation"
+              title="Clear chat"
+              disabled={messages.length === 0}
+              className="inline-flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+          )}
+
           <button
             onClick={() => setState((s) => ({ ...s, open: false }))}
             aria-label="Minimize to bubble"
