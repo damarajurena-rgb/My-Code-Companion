@@ -49,7 +49,8 @@ const MODE_META: Record<Mode, { label: string; icon: typeof GraduationCap; hint:
   exam: { label: "Exam Prep", icon: ScrollText, hint: "Viva-style Q&A drills" },
 };
 
-export function FloatingAssistant({ messages, onSend, loading }: Props) {
+export function FloatingAssistant({ messages, onSend, loading, onClear }: Props) {
+
   const [state, setState] = useState<State>(DEFAULT_STATE);
   const dragRef = useRef<{ dx: number; dy: number; moved: boolean } | null>(null);
   const resizeRef = useRef<{ sw: number; sh: number; sx: number; sy: number } | null>(null);
