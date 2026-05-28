@@ -198,6 +198,21 @@ export function FloatingAssistant({ messages, onSend, loading, onClear }: Props)
           <span className="font-mono text-xs font-semibold">Copilot Assistant</span>
         </div>
         <div className="flex items-center gap-0.5">
+          {onClear && (
+            <button
+              onClick={() => {
+                if (messages.length === 0) return;
+                if (window.confirm("Clear assistant conversation?")) onClear();
+              }}
+              aria-label="Clear conversation"
+              title="Clear chat"
+              disabled={messages.length === 0}
+              className="inline-flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+          )}
+
           <button
             onClick={() => setState((s) => ({ ...s, open: false }))}
             aria-label="Minimize to bubble"
