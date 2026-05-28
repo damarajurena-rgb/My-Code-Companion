@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Bot, Minus, X, GripHorizontal, GraduationCap, Zap, ScrollText } from "lucide-react";
+import { Bot, Minus, X, GripHorizontal, GraduationCap, Zap, ScrollText, Trash2 } from "lucide-react";
 import { AssistantChat, type ChatMessage } from "./AssistantChat";
 
 interface Props {
   messages: ChatMessage[];
   onSend: (text: string) => Promise<void>;
   loading: boolean;
+  onClear?: () => void;
 }
+
 
 const STORAGE_KEY = "ct-floating-assistant";
 
