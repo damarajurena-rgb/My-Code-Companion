@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import mermaid from "mermaid";
-import svgPanZoom from "svg-pan-zoom";
+
 import { AlertTriangle, ZoomIn, ZoomOut, Maximize2, Download } from "lucide-react";
 
 function initMermaid() {
@@ -116,27 +116,39 @@ export function MermaidDiagram({ code, id, onNodeLineClick, onNodeLineHover, hig
     svgEl.style.maxWidth = "100%";
     svgEl.style.maxHeight = "100%";
 
-    try {
-      panZoomRef.current?.destroy();
-    } catch {
-      /* ignore */
-    }
-    panZoomRef.current = svgPanZoom(svgEl as SVGElement, {
-      controlIconsEnabled: false,
-      fit: true,
-      center: true,
-      minZoom: 0.4,
-      maxZoom: 6,
-      zoomScaleSensitivity: 0.3,
-      contain: false,
-    });
+    let cancelled = false;
+    let ro: ResizeObserver | null = null;
 
-    const ro = new ResizeObserver(() => {
-      panZoomRef.current?.resize();
-      panZoomRef.current?.fit();
-      panZoomRef.current?.center();
-    });
-    ro.observe(containerRef.current);
+    (async () => {
+      const mod = (await import("svg-pan-zoom")) as unknown as {
+        default: (el: SVGElement, opts?: Record<string, unknown>) => unknown;
+      };
+      const svgPanZoom = mod.default ?? (mod as unknown as typeof mod.default);
+      if (cancelled) return;
+
+      try {
+        panZoomRef.current?.destroy();
+      } catch {
+        /* ignore */
+      }
+      panZoomRef.current = svgPanZoom(svgEl as SVGElement, {
+        controlIconsEnabled: false,
+        fit: true,
+        center: true,
+        minZoom: 0.4,
+        maxZoom: 6,
+        zoomScaleSensitivity: 0.3,
+        contain: false,
+      }) as typeof panZoomRef.current;
+
+      ro = new ResizeObserver(() => {
+        panZoomRef.current?.resize();
+        panZoomRef.current?.fit();
+        panZoomRef.current?.center();
+      });
+      if (containerRef.current) ro.observe(containerRef.current);
+    })();
+
 
     // Cross-link memory nodes to source lines: any node whose label contains
     // (L<number>) gets click + hover handlers that drive the editor highlight.
@@ -163,7 +175,8 @@ export function MermaidDiagram({ code, id, onNodeLineClick, onNodeLineHover, hig
     });
 
     return () => {
-      ro.disconnect();
+      cancelled = true;
+      ro?.disconnect();
       cleanupFns.forEach((fn) => fn());
       try {
         panZoomRef.current?.destroy();
