@@ -148,6 +148,10 @@ export function FloatingAssistant({ messages, onSend, loading, onClear }: Props)
 
   // ────────── Circular bubble ──────────
   if (!state.open) {
+    const posStyle =
+      state.x >= 0 && state.y >= 0
+        ? { left: state.x, top: state.y }
+        : { right: 20, bottom: 20 };
     return (
       <button
         onMouseDown={startDrag}
@@ -160,7 +164,7 @@ export function FloatingAssistant({ messages, onSend, loading, onClear }: Props)
         }}
         aria-label="Open Copilot Assistant (Alt+A)"
         title="Copilot Assistant — drag to move, click to open (Alt+A)"
-        style={{ left: state.x, top: state.y, width: BUBBLE, height: BUBBLE }}
+        style={{ ...posStyle, width: BUBBLE, height: BUBBLE }}
         className="fixed z-40 flex items-center justify-center rounded-full bg-mint text-primary-foreground shadow-2xl ring-2 ring-mint/40 transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring active:cursor-grabbing"
       >
         <Bot className="h-6 w-6" aria-hidden />
