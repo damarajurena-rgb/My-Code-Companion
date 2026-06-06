@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import mermaid from "mermaid";
-import svgPanZoom from "svg-pan-zoom";
+type SvgPanZoomFn = typeof import("svg-pan-zoom").default;
 import { AlertTriangle, ZoomIn, ZoomOut, Maximize2, Download } from "lucide-react";
 
 function initMermaid() {
