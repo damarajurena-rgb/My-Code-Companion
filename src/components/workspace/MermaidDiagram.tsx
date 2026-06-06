@@ -175,7 +175,8 @@ export function MermaidDiagram({ code, id, onNodeLineClick, onNodeLineHover, hig
     });
 
     return () => {
-      ro.disconnect();
+      cancelled = true;
+      ro?.disconnect();
       cleanupFns.forEach((fn) => fn());
       try {
         panZoomRef.current?.destroy();
