@@ -4,6 +4,7 @@ import mermaid from "mermaid";
 import { AlertTriangle, ZoomIn, ZoomOut, Maximize2, Download } from "lucide-react";
 
 function initMermaid() {
+  if (typeof document === "undefined") return;
   const isDark = document.documentElement.classList.contains("dark");
   mermaid.initialize({
     startOnLoad: false,
@@ -50,7 +51,7 @@ function initMermaid() {
   });
 }
 
-initMermaid();
+if (typeof document !== "undefined") initMermaid();
 
 interface Props {
   code: string;
