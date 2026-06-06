@@ -167,7 +167,15 @@ function Workspace() {
               AI code explainer · diagrams · memory · execution flow
             </p>
           </div>
+          <span
+            className="ml-1 inline-flex items-center gap-1 rounded-full border border-mint/40 bg-mint/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-mint"
+            title="Premium features unlocked: debugging, optimization, runtime analysis, progress tracking"
+            aria-label="Premium plan active"
+          >
+            <Sparkles className="h-3 w-3" aria-hidden /> Premium
+          </span>
         </div>
+
 
         <div className="flex items-center gap-2">
           <Select value={language} onValueChange={onLanguageChange}>
