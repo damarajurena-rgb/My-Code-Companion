@@ -139,7 +139,7 @@ export function MermaidDiagram({ code, id, onNodeLineClick, onNodeLineHover, hig
         maxZoom: 6,
         zoomScaleSensitivity: 0.3,
         contain: false,
-      });
+      }) as typeof panZoomRef.current;
 
       ro = new ResizeObserver(() => {
         panZoomRef.current?.resize();
