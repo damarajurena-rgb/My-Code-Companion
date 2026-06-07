@@ -13,6 +13,9 @@ import { FloatingAssistant } from "@/components/workspace/FloatingAssistant";
 import { MermaidDiagram } from "@/components/workspace/MermaidDiagram";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { OnboardingTour } from "@/components/OnboardingTour";
+import { PremiumButton } from "@/components/PremiumButton";
+import { MobileBlock } from "@/components/MobileBlock";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Select,
   SelectContent,
@@ -43,6 +46,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Workspace() {
+  const isMobile = useIsMobile();
   const [language, setLanguage] = useState<LangId>("python");
   const [code, setCode] = useState<string>(SAMPLES.python);
   const [highlightedLine, setHighlightedLine] = useState<number | null>(null);
@@ -144,6 +148,8 @@ function Workspace() {
 
   const currentLang = LANGUAGES.find((l) => l.id === language)!;
 
+  if (isMobile) return <MobileBlock />;
+
   return (
     <div className="flex min-h-dvh flex-col">
       <OnboardingTour />
@@ -167,17 +173,11 @@ function Workspace() {
               AI code explainer · diagrams · memory · execution flow
             </p>
           </div>
-          <span
-            className="ml-1 inline-flex items-center gap-1 rounded-full border border-mint/40 bg-mint/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-mint"
-            title="Premium features unlocked: debugging, optimization, runtime analysis, progress tracking"
-            aria-label="Premium plan active"
-          >
-            <Sparkles className="h-3 w-3" aria-hidden /> Premium
-          </span>
         </div>
 
 
         <div className="flex items-center gap-2">
+          <PremiumButton />
           <Select value={language} onValueChange={onLanguageChange}>
             <SelectTrigger aria-label="Programming language" className="h-8 w-[130px] border-border bg-input font-mono text-xs">
               <SelectValue />

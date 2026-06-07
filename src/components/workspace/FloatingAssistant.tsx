@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Bot, Minus, X, GripHorizontal, GraduationCap, Zap, ScrollText, Trash2 } from "lucide-react";
+import { X, GraduationCap, Zap, ScrollText, Trash2, MessageCircle } from "lucide-react";
 import { AssistantChat, type ChatMessage } from "./AssistantChat";
 
 interface Props {
@@ -9,30 +9,26 @@ interface Props {
   onClear?: () => void;
 }
 
-
 const STORAGE_KEY = "ct-floating-assistant";
 
 type Mode = "tutor" | "quick" | "exam";
 
 type State = {
-  x: number;
-  y: number;
   w: number;
   h: number;
-  open: boolean; // true = expanded panel, false = circular bubble
+  open: boolean;
   mode: Mode;
 };
 
 const DEFAULT_STATE: State = {
-  x: -1,
-  y: -1,
   w: 400,
   h: 560,
   open: false,
   mode: "tutor",
 };
 
-const BUBBLE = 56;
+const BUBBLE = 60;
+const GRADIENT = "linear-gradient(135deg, #0D1B2A, #000000)";
 
 const MODE_PREFIX: Record<Mode, string> = {
   tutor:
@@ -50,27 +46,23 @@ const MODE_META: Record<Mode, { label: string; icon: typeof GraduationCap; hint:
 };
 
 export function FloatingAssistant({ messages, onSend, loading, onClear }: Props) {
-
   const [state, setState] = useState<State>(DEFAULT_STATE);
-  const dragRef = useRef<{ dx: number; dy: number; moved: boolean } | null>(null);
   const resizeRef = useRef<{ sw: number; sh: number; sx: number; sy: number } | null>(null);
 
-  // Load persisted state + default position bottom-right
+  // Load persisted size/mode/open
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      const saved = raw ? (JSON.parse(raw) as Partial<State>) : {};
-      setState((s) => {
-        const next = { ...s, ...saved };
-        const size = next.open ? { w: next.w, h: next.h } : { w: BUBBLE, h: BUBBLE };
-        if (next.x < 0 || next.y < 0) {
-          next.x = Math.max(16, window.innerWidth - size.w - 20);
-          next.y = Math.max(16, window.innerHeight - size.h - 20);
-        }
-        next.x = Math.min(Math.max(0, next.x), window.innerWidth - 60);
-        next.y = Math.min(Math.max(0, next.y), window.innerHeight - 60);
-        return next;
-      });
+      if (raw) {
+        const saved = JSON.parse(raw) as Partial<State>;
+        setState((s) => ({
+          ...s,
+          w: saved.w ?? s.w,
+          h: saved.h ?? s.h,
+          mode: saved.mode ?? s.mode,
+          open: saved.open ?? s.open,
+        }));
+      }
     } catch {
       /* ignore */
     }
@@ -84,27 +76,18 @@ export function FloatingAssistant({ messages, onSend, loading, onClear }: Props)
     }
   }, [state]);
 
-  // Pointer events for drag / resize
+  // Resize from top-left grip (panel anchored bottom-right)
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
-      if (dragRef.current) {
-        dragRef.current.moved = true;
-        setState((s) => ({
-          ...s,
-          x: Math.min(Math.max(0, e.clientX - dragRef.current!.dx), window.innerWidth - 50),
-          y: Math.min(Math.max(0, e.clientY - dragRef.current!.dy), window.innerHeight - 50),
-        }));
-      } else if (resizeRef.current) {
-        const r = resizeRef.current;
-        setState((s) => ({
-          ...s,
-          w: Math.max(320, Math.min(window.innerWidth - 20, r.sw + (e.clientX - r.sx))),
-          h: Math.max(320, Math.min(window.innerHeight - 20, r.sh + (e.clientY - r.sy))),
-        }));
-      }
+      if (!resizeRef.current) return;
+      const r = resizeRef.current;
+      setState((s) => ({
+        ...s,
+        w: Math.max(320, Math.min(window.innerWidth - 20, r.sw + (r.sx - e.clientX))),
+        h: Math.max(320, Math.min(window.innerHeight - 20, r.sh + (r.sy - e.clientY))),
+      }));
     };
     const onUp = () => {
-      dragRef.current = null;
       resizeRef.current = null;
       document.body.style.userSelect = "";
     };
@@ -116,17 +99,13 @@ export function FloatingAssistant({ messages, onSend, loading, onClear }: Props)
     };
   }, []);
 
-  const startDrag = (e: React.MouseEvent) => {
-    dragRef.current = { dx: e.clientX - state.x, dy: e.clientY - state.y, moved: false };
-    document.body.style.userSelect = "none";
-  };
   const startResize = (e: React.MouseEvent) => {
     e.stopPropagation();
     resizeRef.current = { sw: state.w, sh: state.h, sx: e.clientX, sy: e.clientY };
     document.body.style.userSelect = "none";
   };
 
-  // Global shortcut: Alt+A toggles the bubble open/closed
+  // Alt+A toggle, Esc closes
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.altKey && (e.key === "a" || e.key === "A")) {
@@ -146,32 +125,32 @@ export function FloatingAssistant({ messages, onSend, loading, onClear }: Props)
     [onSend, state.mode],
   );
 
-  // ────────── Circular bubble ──────────
+  const handleClear = () => {
+    if (!onClear || messages.length === 0) return;
+    if (window.confirm("Clear assistant conversation?")) onClear();
+  };
+
+  // ────────── Circular bubble (flush bottom-right) ──────────
   if (!state.open) {
-    const posStyle =
-      state.x >= 0 && state.y >= 0
-        ? { left: state.x, top: state.y }
-        : { right: 20, bottom: 20 };
     return (
       <button
-        onMouseDown={startDrag}
-        onClick={(e) => {
-          if (dragRef.current?.moved) {
-            e.preventDefault();
-            return;
-          }
-          setState((s) => ({ ...s, open: true }));
-        }}
+        onClick={() => setState((s) => ({ ...s, open: true }))}
         aria-label="Open Copilot Assistant (Alt+A)"
-        title="Copilot Assistant — drag to move, click to open (Alt+A)"
-        style={{ ...posStyle, width: BUBBLE, height: BUBBLE }}
-        className="fixed z-40 flex items-center justify-center rounded-full bg-mint text-primary-foreground shadow-2xl ring-2 ring-mint/40 transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring active:cursor-grabbing"
+        title="Copilot Assistant — click to open (Alt+A)"
+        style={{
+          width: BUBBLE,
+          height: BUBBLE,
+          background: GRADIENT,
+          bottom: 0,
+          right: 0,
+        }}
+        className="fixed z-40 m-3 flex items-center justify-center rounded-full text-white shadow-2xl ring-2 ring-white/20 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-mint"
       >
-        <Bot className="h-6 w-6" aria-hidden />
+        <MessageCircle className="h-6 w-6" aria-hidden />
         {messages.length > 0 && (
           <span
             aria-hidden
-            className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-background px-1 font-mono text-[10px] font-bold text-mint ring-2 ring-mint"
+            className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-mint px-1 font-mono text-[10px] font-bold text-primary-foreground ring-2 ring-background"
           >
             {messages.length}
           </span>
@@ -180,7 +159,7 @@ export function FloatingAssistant({ messages, onSend, loading, onClear }: Props)
     );
   }
 
-  // ────────── Expanded panel ──────────
+  // ────────── Expanded panel (anchored bottom-right) ──────────
   const w = Math.min(state.w, typeof window !== "undefined" ? window.innerWidth - 20 : state.w);
   const h = Math.min(state.h, typeof window !== "undefined" ? window.innerHeight - 20 : state.h);
 
@@ -188,48 +167,36 @@ export function FloatingAssistant({ messages, onSend, loading, onClear }: Props)
     <div
       role="dialog"
       aria-label="Copilot Assistant panel"
-      style={{ left: state.x, top: state.y, width: w, height: h }}
-      className="fixed z-40 flex flex-col overflow-hidden rounded-xl border border-border bg-background/95 shadow-2xl ring-1 ring-mint/20 backdrop-blur"
+      style={{ right: 12, bottom: 12, width: w, height: h }}
+      className="fixed z-40 flex flex-col overflow-hidden rounded-xl border border-border bg-background/95 shadow-2xl ring-1 ring-white/10 backdrop-blur"
     >
-      {/* Drag handle / header */}
+      {/* Header */}
       <div
-        onMouseDown={startDrag}
-        className="flex h-11 shrink-0 cursor-move items-center justify-between gap-2 border-b border-border bg-card/80 px-3"
+        style={{ background: GRADIENT }}
+        className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-border px-3 text-white"
       >
         <div className="flex items-center gap-2">
-          <GripHorizontal className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
-          <Bot className="h-3.5 w-3.5 text-mint" aria-hidden />
+          <MessageCircle className="h-4 w-4" aria-hidden />
           <span className="font-mono text-xs font-semibold">Copilot Assistant</span>
         </div>
         <div className="flex items-center gap-0.5">
           {onClear && (
             <button
-              onClick={() => {
-                if (messages.length === 0) return;
-                if (window.confirm("Clear assistant conversation?")) onClear();
-              }}
+              onClick={handleClear}
               aria-label="Clear conversation"
               title="Clear chat"
               disabled={messages.length === 0}
-              className="inline-flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
+              className="inline-flex h-7 items-center gap-1 rounded px-2 text-[10px] font-medium text-white/80 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint disabled:opacity-40"
             >
-              <Trash2 className="h-3.5 w-3.5" />
+              <Trash2 className="h-3 w-3" />
+              Clear
             </button>
           )}
-
-          <button
-            onClick={() => setState((s) => ({ ...s, open: false }))}
-            aria-label="Minimize to bubble"
-            title="Minimize"
-            className="inline-flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <Minus className="h-3.5 w-3.5" />
-          </button>
           <button
             onClick={() => setState((s) => ({ ...s, open: false }))}
             aria-label="Close assistant"
             title="Close (Esc)"
-            className="inline-flex h-7 w-7 items-center justify-center rounded text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex h-7 w-7 items-center justify-center rounded text-white/80 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -275,14 +242,14 @@ export function FloatingAssistant({ messages, onSend, loading, onClear }: Props)
         <AssistantChat messages={messages} onSend={wrappedSend} loading={loading} />
       </div>
 
-      {/* Resize grip */}
+      {/* Resize grip — top-left since panel is anchored bottom-right */}
       <div
         onMouseDown={startResize}
         aria-hidden
         title="Resize"
-        className="absolute bottom-0 right-0 h-4 w-4 cursor-nwse-resize"
+        className="absolute left-0 top-0 h-4 w-4 cursor-nwse-resize"
         style={{
-          background: "linear-gradient(135deg, transparent 50%, hsl(var(--border, 0 0% 50%)) 50%)",
+          background: "linear-gradient(315deg, transparent 50%, hsl(var(--border, 0 0% 50%)) 50%)",
         }}
       />
     </div>
