@@ -148,6 +148,8 @@ function Workspace() {
 
   const currentLang = LANGUAGES.find((l) => l.id === language)!;
 
+  if (isMobile) return <MobileBlock />;
+
   return (
     <div className="flex min-h-dvh flex-col">
       <OnboardingTour />
