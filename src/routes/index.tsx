@@ -15,6 +15,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { OnboardingTour } from "@/components/OnboardingTour";
 import { PremiumButton } from "@/components/PremiumButton";
 import { MobileBlock } from "@/components/MobileBlock";
+import { IntroAnimation } from "@/components/IntroAnimation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Select,
@@ -152,6 +153,7 @@ function Workspace() {
 
   return (
     <div className="flex min-h-dvh flex-col">
+      <IntroAnimation />
       <OnboardingTour />
       <a
         href="#workspace-main"
