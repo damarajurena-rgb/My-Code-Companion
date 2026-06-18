@@ -17,7 +17,12 @@ function currentTheme() {
 export function CodeEditor({ value, onChange, language, onLineClick, highlightedLine }: CodeEditorProps) {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const decoRef = useRef<string[]>([]);
+  const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState<string>(currentTheme());
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const onChange = () => setTheme(currentTheme());
@@ -52,25 +57,31 @@ export function CodeEditor({ value, onChange, language, onLineClick, highlighted
         .editor-line-highlight { background: color-mix(in oklab, var(--mint) 18%, transparent); }
         .editor-line-marker { background: var(--mint); width: 3px !important; margin-left: 3px; }
       `}</style>
-      <Editor
-        height="100%"
-        language={language}
-        value={value}
-        theme={theme}
-        onChange={(v) => onChange(v ?? "")}
-        onMount={handleMount}
-        options={{
-          fontFamily: "JetBrains Mono, monospace",
-          fontSize: 13,
-          minimap: { enabled: false },
-          scrollBeyondLastLine: false,
-          smoothScrolling: true,
-          padding: { top: 14, bottom: 14 },
-          renderLineHighlight: "gutter",
-          tabSize: 2,
-          ariaLabel: "Code editor",
-        }}
-      />
+      {mounted ? (
+        <Editor
+          height="100%"
+          language={language}
+          value={value}
+          theme={theme}
+          onChange={(v) => onChange(v ?? "")}
+          onMount={handleMount}
+          options={{
+            fontFamily: "JetBrains Mono, monospace",
+            fontSize: 13,
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            smoothScrolling: true,
+            padding: { top: 14, bottom: 14 },
+            renderLineHighlight: "gutter",
+            tabSize: 2,
+            ariaLabel: "Code editor",
+          }}
+        />
+      ) : (
+        <div className="flex h-full items-center justify-center font-mono text-xs text-muted-foreground">
+          Loading editor...
+        </div>
+      )}
     </div>
   );
 }
