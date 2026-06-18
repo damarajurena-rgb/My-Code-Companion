@@ -191,6 +191,11 @@
   --ring: oklch(0.95 0 0);
   --mint: oklch(0.92 0.2 305);
   --mint-glow: oklch(0.95 0.18 310);
+
+  --gold: oklch(0.95 0.2 95);
+  --gold-glow: oklch(1 0.15 90);
+  --gold-foreground: oklch(0 0 0);
+
   --bg-gradient-1: oklch(0 0 0 / 0);
   --bg-gradient-2: oklch(0 0 0 / 0);
 }
