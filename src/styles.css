@@ -31,6 +31,9 @@
   --color-mint: var(--mint);
   --color-mint-glow: var(--mint-glow);
   --color-forest: var(--forest);
+  --color-gold: var(--gold);
+  --color-gold-glow: var(--gold-glow);
+  --color-gold-foreground: var(--gold-foreground);
   --font-sans: "Work Sans", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --font-display: "JetBrains Mono", ui-monospace, monospace;
