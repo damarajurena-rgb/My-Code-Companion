@@ -1,8 +1,8 @@
-import ReactMarkdown from "react-markdown";
 import { useState } from "react";
 import { Loader2, Sparkles, AlertTriangle, Copy, Check, Download, ClipboardCopy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { MarkdownText } from "@/components/MarkdownText";
 
 export interface MemorySnapshot {
   line: number;
@@ -252,7 +252,7 @@ export function ExplanationPanel({
                         {consequence.data.removedCode}
                       </pre>
                       <div className="prose prose-sm dark:prose-invert max-w-none text-sm">
-                        <ReactMarkdown>{consequence.data.impact}</ReactMarkdown>
+                        <MarkdownText>{consequence.data.impact}</MarkdownText>
                       </div>
                     </div>
                   )}
