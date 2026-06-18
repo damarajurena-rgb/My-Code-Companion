@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useCallback, useEffect } from "react";
 import { Code2, Sparkles, Database, Activity } from "lucide-react";
-import ReactMarkdown from "react-markdown";
 
 import { aiAssist } from "@/lib/ai.functions";
 import { LANGUAGES, SAMPLES, type LangId } from "@/lib/languages";
@@ -16,6 +15,7 @@ import { OnboardingTour } from "@/components/OnboardingTour";
 import { PremiumButton } from "@/components/PremiumButton";
 import { MobileBlock } from "@/components/MobileBlock";
 import { IntroAnimation } from "@/components/IntroAnimation";
+import { MarkdownText } from "@/components/MarkdownText";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Select,
@@ -412,7 +412,7 @@ function DiagramView({
           {snapshotLine ? `Snapshot @ L${snapshotLine}` : "Notes"}
         </p>
         <div className="prose prose-sm dark:prose-invert max-w-none text-sm">
-          {text ? <ReactMarkdown>{text}</ReactMarkdown> : <p className="text-muted-foreground">—</p>}
+          {text ? <MarkdownText>{text}</MarkdownText> : <p className="text-muted-foreground">—</p>}
         </div>
         <p className="mt-3 text-[10px] text-muted-foreground">
           Tip: hover a code line or click a memory node labeled (Lx) to sync views.

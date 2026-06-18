@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
 import { Loader2, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { MarkdownText } from "@/components/MarkdownText";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -89,7 +89,7 @@ export function AssistantChat({ messages, onSend, loading }: Props) {
               >
                 {m.role === "assistant" ? (
                   <div className="prose prose-sm dark:prose-invert max-w-none">
-                    <ReactMarkdown>{m.content}</ReactMarkdown>
+                    <MarkdownText>{m.content}</MarkdownText>
                   </div>
                 ) : (
                   <p className="whitespace-pre-wrap">{m.content}</p>
