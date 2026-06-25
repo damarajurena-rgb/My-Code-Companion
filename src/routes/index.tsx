@@ -151,7 +151,6 @@ function Workspace() {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <IntroAnimation />
       <OnboardingTour />
       <a
         href="#workspace-main"
