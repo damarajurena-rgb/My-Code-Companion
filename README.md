@@ -1,54 +1,31 @@
-Flow Explainer Pro
+# My Code Companion
 
-An AI-powered code explainer and tutor that helps students understand complex programs with:
-- Line-by-line AI explanations
-- Consequence analysis of code execution
-- Python execution via Pyodide
-- Multi-language parsing (Java, C, C++, JavaScript)
-- Interactive AI assistant (Copilot)
+A student‑friendly web app that explains code line by line with memory execution visualization.  
+Users can paste their code, understand the logic flow, and explore alternative coding approaches with Copilot assistance.
 
-🚀 Features
-- Code editor (Monaco) with syntax highlighting
-- AI explanations for each line of code
-- Consequence analysis (what happens after execution)
-- Python sandbox execution
-- Roadmap:
-  - Phase II: Memory diagrams, flowcharts, recursion stack visualization
-  - Phase III: Debugging support, alternative solutions, code correction
+---
 
-🛠 Tech Stack
-- Frontend: React / Next.js  
-- Backend: Node.js  
-- AI Assistant: Copilot integration  
-- Visualization: D3.js, Mermaid.js, Graphviz (planned)  
-- Execution: Pyodide (Python), Docker (future for other languages)
+## 🚀 Features
+- Line‑by‑line explanation of pasted code
+- Memory execution representation for better visualization
+- Interactive learning: ask Copilot for alternate coding methods
+- Beginner‑friendly UI designed for students
 
-📂 Setup (Navigate → Install → Run)
-1. Navigate into the project folder:
-   `bash
-   cd flow-explainer-pro
-   `
-2. Install dependencies:
-   `bash
-   npm install
-   `
-3. Run the development server:
-   `bash
-   npm run dev
-   `
+---
 
-🌐 Deployment
-- Phase I scaffolded in Lovable  
-- Future deployment planned via Vercel/Netlify
+## 🛠️ Tech Stack
+- HTML, CSS, JavaScript (frontend)
+- Lovable.dev (prototype deployment)
+- GitHub + Vercel (production deployment)
 
-📌 Roadmap
-- [x] Phase I: Editor + AI explanations + consequence analysis  
-- [ ] Phase II: Diagrams (memory, flow, recursion)  
-- [ ] Phase III: Debugging + alternative solutions  
+---
+📖 Usage
+Paste your code into the editor.
+View line‑by‑line explanations.
+Explore memory execution diagrams.
+Ask Copilot for alternate solutions.
 
-👤 Author
-Damara Jurena  
-B.Tech CSE Student | AI & Coding Enthusiast
+🔒 Security Notes
+Code is parsed for explanation only — not executed directly.
 
-🔗 Links
-- GitHub Repo: flow-explainer-pro
+No sensitive data should be stored or logged.
