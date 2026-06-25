@@ -28,13 +28,13 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Copilot Tutor — Line-by-line AI Code Explainer" },
+      { title: "My Code Companion — Line-by-line AI Code Explainer" },
       {
         name: "description",
         content:
           "Paste code in Python, JavaScript, Java, C, or C++ and get line-by-line AI explanations, memory & execution flow diagrams, and tutor-style Q&A.",
       },
-      { property: "og:title", content: "Copilot Tutor — AI Code Explainer" },
+      { property: "og:title", content: "My Code Companion — AI Code Explainer" },
       {
         property: "og:description",
         content: "Understand code line-by-line with diagrams and an integrated AI tutor.",
@@ -166,7 +166,7 @@ function Workspace() {
           </div>
           <div>
             <h1 className="font-mono text-sm font-bold tracking-tight">
-              Copilot<span className="text-mint">.tutor</span>
+              My Code <span className="text-mint">Companion</span>
             </h1>
             <p className="hidden text-[10px] text-muted-foreground sm:block">
               AI code explainer · diagrams · memory · execution flow
