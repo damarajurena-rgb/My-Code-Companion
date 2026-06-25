@@ -12,9 +12,7 @@ import { FloatingAssistant } from "@/components/workspace/FloatingAssistant";
 import { MermaidDiagram } from "@/components/workspace/MermaidDiagram";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { OnboardingTour } from "@/components/OnboardingTour";
-import { PremiumButton } from "@/components/PremiumButton";
 import { MobileBlock } from "@/components/MobileBlock";
-import { IntroAnimation } from "@/components/IntroAnimation";
 import { MarkdownText } from "@/components/MarkdownText";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
