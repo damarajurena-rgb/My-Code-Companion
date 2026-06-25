@@ -12,9 +12,7 @@ import { FloatingAssistant } from "@/components/workspace/FloatingAssistant";
 import { MermaidDiagram } from "@/components/workspace/MermaidDiagram";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { OnboardingTour } from "@/components/OnboardingTour";
-import { PremiumButton } from "@/components/PremiumButton";
 import { MobileBlock } from "@/components/MobileBlock";
-import { IntroAnimation } from "@/components/IntroAnimation";
 import { MarkdownText } from "@/components/MarkdownText";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -153,7 +151,6 @@ function Workspace() {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <IntroAnimation />
       <OnboardingTour />
       <a
         href="#workspace-main"
@@ -179,7 +176,6 @@ function Workspace() {
 
 
         <div className="flex items-center gap-2">
-          <PremiumButton />
           <Select value={language} onValueChange={onLanguageChange}>
             <SelectTrigger aria-label="Programming language" className="h-8 w-[130px] border-border bg-input font-mono text-xs">
               <SelectValue />
