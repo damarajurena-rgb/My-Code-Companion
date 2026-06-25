@@ -176,7 +176,6 @@ function Workspace() {
 
 
         <div className="flex items-center gap-2">
-          <PremiumButton />
           <Select value={language} onValueChange={onLanguageChange}>
             <SelectTrigger aria-label="Programming language" className="h-8 w-[130px] border-border bg-input font-mono text-xs">
               <SelectValue />
