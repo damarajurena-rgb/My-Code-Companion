@@ -66,7 +66,7 @@ export function CodeEditor({ value, onChange, language, onLineClick, highlighted
           onChange={(v) => onChange(v ?? "")}
           onMount={handleMount}
           options={{
-            fontFamily: "JetBrains Mono, monospace",
+            fontFamily: "Consolas, 'Courier New', monospace",
             fontSize: 13,
             minimap: { enabled: false },
             scrollBeyondLastLine: false,
@@ -74,6 +74,16 @@ export function CodeEditor({ value, onChange, language, onLineClick, highlighted
             padding: { top: 14, bottom: 14 },
             renderLineHighlight: "gutter",
             tabSize: 2,
+            insertSpaces: true,
+            detectIndentation: true,
+            wordWrap: "off",
+            scrollbar: {
+              horizontal: "auto",
+              vertical: "auto",
+              horizontalScrollbarSize: 10,
+              verticalScrollbarSize: 10,
+              alwaysConsumeMouseWheel: false,
+            },
             ariaLabel: "Code editor",
           }}
         />
