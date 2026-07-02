@@ -1,0 +1,9 @@
+# My Code Companion
+
+> AI code explainer with line-by-line breakdowns, memory diagrams, and execution flow visualizations for Python, JavaScript, Java, C, and C++.
+
+My Code Companion helps students and developers understand code by generating synchronized explanations and diagrams. Paste code, click Explain, and get per-line reasoning, memory snapshots (stack/heap/arrays/linked lists), and execution flow graphs — plus an in-app tutor chat.
+
+## Pages
+
+- [Home](/): Interactive code editor with AI explanations, memory diagrams, execution flow, and a floating tutor assistant.
