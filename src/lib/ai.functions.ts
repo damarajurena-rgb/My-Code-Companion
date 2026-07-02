@@ -108,12 +108,26 @@ Return STRICT JSON only:
 };
 
 export const aiAssist = createServerFn({ method: "POST" })
-  .inputValidator((d: AIInput) => d)
+  .inputValidator((d: unknown): AIInput => aiInputSchema.parse(d) as AIInput)
   .handler(async ({ data }) => {
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
+
+    // Per-IP rate limit to mitigate anonymous credit abuse.
+    try {
+      const req = getRequest();
+      const ip =
+        req?.headers.get("cf-connecting-ip") ??
+        req?.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+        "unknown";
+      checkRateLimit(ip);
+    } catch (e) {
+      if (e instanceof Error && e.message.startsWith("Rate limit")) throw e;
+      // If request context is unavailable, fall through without limiting.
+    }
+
 
     const system = SYSTEM_PROMPTS[data.mode];
     const userContent =
