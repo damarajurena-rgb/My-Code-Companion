@@ -16,8 +16,7 @@ Users can paste their code, understand the logic flow, and explore alternative c
 ## 🛠️ Tech Stack
 - HTML, CSS, JavaScript (frontend)
 - Lovable.dev (prototype deployment)
-- GitHub + Vercel (production deployment)
-
+- GitHub 
 ---
 📖 Usage
 Paste your code into the editor.
