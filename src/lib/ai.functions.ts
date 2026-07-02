@@ -1,4 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
+import { z } from "zod";
 
 type Mode = "explain" | "consequences" | "chat";
 
@@ -9,6 +11,43 @@ interface AIInput {
   question?: string;
   history?: Array<{ role: "user" | "assistant"; content: string }>;
 }
+
+const aiInputSchema = z.object({
+  mode: z.enum(["explain", "consequences", "chat"]),
+  language: z.string().max(50),
+  code: z.string().max(50_000),
+  question: z.string().max(4_000).optional(),
+  history: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string().max(8_000),
+      }),
+    )
+    .max(30)
+    .optional(),
+});
+
+// Simple in-memory per-IP rate limiter to mitigate credit abuse.
+// Note: worker isolates may not share memory, but this still meaningfully
+// throttles bursts from a single client hitting the same isolate.
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 15;
+const rateBuckets = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(key: string) {
+  const now = Date.now();
+  const bucket = rateBuckets.get(key);
+  if (!bucket || bucket.resetAt < now) {
+    rateBuckets.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return;
+  }
+  bucket.count += 1;
+  if (bucket.count > RATE_LIMIT_MAX) {
+    throw new Error("Rate limit exceeded. Please wait a minute and try again.");
+  }
+}
+
 
 const SYSTEM_PROMPTS: Record<Mode, string> = {
   explain: `You are Copilot Tutor, a friendly programming tutor. The user gives you source code in a given language. Produce a precise LINE-BY-LINE explanation, an overall memory diagram, an execution-flow diagram, AND per-line memory SNAPSHOTS that show how memory evolves.
@@ -69,12 +108,26 @@ Return STRICT JSON only:
 };
 
 export const aiAssist = createServerFn({ method: "POST" })
-  .inputValidator((d: AIInput) => d)
+  .inputValidator((d: unknown): AIInput => aiInputSchema.parse(d) as AIInput)
   .handler(async ({ data }) => {
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
+
+    // Per-IP rate limit to mitigate anonymous credit abuse.
+    try {
+      const req = getRequest();
+      const ip =
+        req?.headers.get("cf-connecting-ip") ??
+        req?.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+        "unknown";
+      checkRateLimit(ip);
+    } catch (e) {
+      if (e instanceof Error && e.message.startsWith("Rate limit")) throw e;
+      // If request context is unavailable, fall through without limiting.
+    }
+
 
     const system = SYSTEM_PROMPTS[data.mode];
     const userContent =

@@ -40,14 +40,14 @@ function initMermaid() {
           edgeLabelBackground: "#ffffff",
         },
     flowchart: {
-      htmlLabels: true,
+      htmlLabels: false,
       curve: "basis",
       padding: 16,
       nodeSpacing: 50,
       rankSpacing: 60,
       useMaxWidth: false,
     },
-    securityLevel: "loose",
+    securityLevel: "strict",
   });
 }
 
