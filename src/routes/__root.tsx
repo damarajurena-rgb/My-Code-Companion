@@ -73,22 +73,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "My Code Comapnion - Ai assistance" },
-      {
-        name: "description",
-        content:
-          "Line-by-line AI explanations for Python, JavaScript, Java, C, and C++ with memory and execution flow insights.",
-      },
-      { name: "author", content: "Copilot Tutor" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { property: "og:title", content: "My Code Comapnion - Ai assistance" },
-      { name: "twitter:title", content: "My Code Comapnion - Ai assistance" },
-      { name: "description", content: "Developed a student-focused tool that explains programming logic step by step. The project provides line-by-line explanations, memory diagrams, and execution fl" },
-      { property: "og:description", content: "Developed a student-focused tool that explains programming logic step by step. The project provides line-by-line explanations, memory diagrams, and execution fl" },
-      { name: "twitter:description", content: "Developed a student-focused tool that explains programming logic step by step. The project provides line-by-line explanations, memory diagrams, and execution fl" },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/f5decbff-97d1-40c8-801f-240f5572c85b" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/f5decbff-97d1-40c8-801f-240f5572c85b" },
+      { property: "og:site_name", content: "My Code Companion" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "author", content: "My Code Companion" },
     ],
     links: [
       {

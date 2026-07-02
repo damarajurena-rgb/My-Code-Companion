@@ -34,12 +34,21 @@ export const Route = createFileRoute("/")({
         content:
           "Paste code in Python, JavaScript, Java, C, or C++ and get line-by-line AI explanations, memory & execution flow diagrams, and tutor-style Q&A.",
       },
-      { property: "og:title", content: "My Code Companion — AI Code Explainer" },
+      { property: "og:title", content: "My Code Companion — Line-by-line AI Code Explainer" },
       {
         property: "og:description",
-        content: "Understand code line-by-line with diagrams and an integrated AI tutor.",
+        content:
+          "Understand code line-by-line with synchronized memory diagrams, execution flow visualizations, and an integrated AI tutor.",
+      },
+      { property: "og:url", content: "https://my-code-comapnion.lovable.app/" },
+      { name: "twitter:title", content: "My Code Companion — Line-by-line AI Code Explainer" },
+      {
+        name: "twitter:description",
+        content:
+          "Understand code line-by-line with synchronized memory diagrams, execution flow visualizations, and an integrated AI tutor.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://my-code-comapnion.lovable.app/" }],
   }),
   component: Workspace,
 });
@@ -166,7 +175,7 @@ function Workspace() {
           </div>
           <div>
             <h1 className="font-mono text-sm font-bold tracking-tight">
-              My Code <span className="text-mint">Companion</span>
+              My Code <span className="text-mint">Companion</span> — Line-by-line AI Code Explainer
             </h1>
             <p className="hidden text-[10px] text-muted-foreground sm:block">
               AI code explainer · diagrams · memory · execution flow
